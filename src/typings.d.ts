@@ -11,4 +11,4 @@ interface NodeModule {
   id: string;
 }
 
-declare var echarts: any;
+// declare var echarts: any;    // Lo elimino porque la IA me lo propuso al no poder compilar el proyecto

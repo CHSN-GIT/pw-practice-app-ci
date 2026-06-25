@@ -1,14 +1,15 @@
 // Primero que nada debemos importar el metodo test desde PlayWright y luego definir los tests
-
-import { test, expect } from "@playwright/test";
+import { test, expect } from "@playwright/test";  
 
 
 
 // Ahora el nuevo test apuntando a la dirección web con un ejemplo https://globalsqa.com/demo-site/draganddrop/
 
-test('Drag and Drop with Iframe', async({page}) => {
+
+    test('Drag and Drop with Iframe', async({page}) => {
 
     await page.goto('https://globalsqa.com/demo-site/draganddrop/')
+
 
     // Antes que nada la página en cuestión ha cambiado y ahora tiene una plantilla en donde se acepta o no
     // el manejo de las cookies.  Para que la prueba se pueda llevar a cabo haremos un clic en el botón de

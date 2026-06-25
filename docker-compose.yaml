@@ -1,0 +1,22 @@
+version: '5.1.4'
+services:
+  # el nombre de este servicio es netamente referencial
+  playwright-test:  
+    # definimos aquí el nombre con el que se creará la imagen
+    image: playwright-test 
+    # como esta imagen no está creada le indicaremos dónde creala
+    # y además que debe hacerlo baso en nuestro Dockerfile
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    # una vez creada la imagen queremos ejecutar nuestro test
+    command: npm run pageObjects-chromium
+    # luego debo indicarle donde guardar los resultados
+    volumes:
+      # debo aquí señalar dónde se almacenará y desde dónde traer los datos (despues de los ":")
+      # lo mismo hay que hacer para cada datos que se quiera trasladar
+      - ./playwright-report/:/app/playwright-report
+      - ./test-results/:/app/test-results
+
+      
+

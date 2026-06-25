@@ -15,7 +15,8 @@ test('primer test', async ({page}) => {
 
 
 test('Navegar a datepicker page', async ({page}) => {
-    await page.goto('http://localhost:4200/')
+    // en este GoTo utilizaemos la variable de entorno baseURL utilizando el valor '/'
+    await page.goto('/')
 
     // ahora realizaremos un par de clicks en la página
     // primero en la opción Form y luego dentro de ella en Form Layouts

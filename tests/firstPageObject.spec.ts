@@ -11,7 +11,7 @@ import { NavigationPage } from "../page-objects/navigationPage-PlayWright_Recome
 
 // Al tener solo una línea de código esta función no será definida en el fichero de navegación
 test.beforeEach(async({page}) => {
-    await page.goto('http://localhost:4200/')
+    await page.goto('/')
 })
 
 

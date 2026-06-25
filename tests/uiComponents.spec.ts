@@ -1,11 +1,18 @@
 import test, { expect } from "@playwright/test"
 import { timeout } from "rxjs-compat/operator/timeout"
 
+// test.describe.configure({mode:"parallel"})
+
 test.beforeEach(async({page}) => {
-    await page.goto('http://localhost:4200/')
+    await page.goto('/')
 })
 
+
+// test.describe.parallel('Form Layouts page', () => {    definición en caso de que este si sea un test q deba ejecutarse en forma paralela
 test.describe('Form Layouts page', () => {
+
+    // Redefinición de los reintentos en caso de error
+    test.describe.configure({retries: 2})
 
     test.beforeEach(async({page}) => {
         await page.getByText('Forms').click()
@@ -13,7 +20,7 @@ test.describe('Form Layouts page', () => {
     })
 
 
-    test('Input Fields', async({page}) => {
+    test('Input Fields', async({page}, testInfo) => {
 
         // Identificamos el input que queremos y lo asignamos a la constante
         const usingTheGridEmailInput = page.locator('nb-card', {hasText: "Using the Grid"}).getByRole('textbox', {name: "Email"})
@@ -24,9 +31,14 @@ test.describe('Form Layouts page', () => {
         // para limpiar el campo de input usamos la función clear()
         await usingTheGridEmailInput.clear()
 
+        // Utilizaremos aquí una segunda definición en caso de que este sea un reintento del test
+        // De esta manera corregiremos el error en la definición del email (solo para reflejar el uso de esta función)
+        if(testInfo.retry){
+           await usingTheGridEmailInput.pressSequentially('test123456789@test.com', {delay:100})
+        } else {
         // la función pressSequentially()  llenará el campo secuencialmente y podremos poner un delay para que la inserción sea simulada a la humana
-        await usingTheGridEmailInput.pressSequentially('test123456789@test.com', {delay:100})
-
+            await usingTheGridEmailInput.pressSequentially('test123456789000@test.com', {delay:100})
+        }
 
         // Generic Assertion
         const inputValue = await usingTheGridEmailInput.inputValue()   // obtenemos el valor del campo input
@@ -76,7 +88,7 @@ test.describe('Form Layouts page', () => {
 // no sería necesario el "describe" que es utilizado para una serie de test
 // relacionados a un área específica)    *Lo he hecho para practicar
 test.describe('Checkboxes', () => {
-    
+
     test.beforeEach(async({page}) => {
         await page.getByText('Modal & Overlays').click()
         await page.getByText('Toastr').click()

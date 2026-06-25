@@ -6,7 +6,10 @@ import { timeout } from "rxjs-compat/operator/timeout";
 // Acumularemos en la función (beforeEach()) las líneas de código que se repiten (como en los anteriores ejemplos)
 
 test.beforeEach(async({page}) => {
-    await page.goto('http://uitestingplayground.com/ajax')  // página de testing  (botones con demora de 50seg etc)
+    // await page.goto('http://uitestingplayground.com/ajax')  // página de testing  (botones con demora de 50seg etc)
+                                                               // llamaremos a la web a través de Variables de entorno de .ENV
+    await page.goto(process.env.URL_TIMEOUT!)    // sumamos el "!" para que Playwright no lo detecte como un fallo al no tener valor para él si
+                                                 // no está en ejecución.
     await page.getByText('Button Triggering AJAX Request').click()
 })
 

@@ -48,11 +48,12 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-/allure-report/assets/
-/allure-report/data/
-/allure-report/export/
-/allure-report/history/
-/allure-report/widgets/
+/allure-report/*.*
+/allure-report/assets/*.*
+/allure-report/data/*.*
+/allure-report/export/*.*
+/allure-report/history/*.*
+/allure-report/widgets/*.*
 /allure-results/
 /screeShots/
 

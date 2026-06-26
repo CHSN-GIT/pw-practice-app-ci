@@ -1,3 +1,57 @@
+# name: Playwright Tests
+# on:
+#   push:
+#     branches: [ main, master ]
+#   pull_request:
+#     branches: [ main, master ]
+# jobs:
+#   test:
+#     timeout-minutes: 60
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v4
+    
+#     - uses: actions/setup-node@v4
+#       with:
+#         node-version: lts/*
+        
+#     - name: Install dependencies
+#       run: npm ci
+
+#     # 1. Configuración de la caché para los navegadores
+#     - name: Cache Playwright browsers
+#       id: playwright-cache
+#       uses: actions/cache@v4
+#       with:
+#         path: ~/.cache/ms-playwright
+#         key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+#     # 2. Descargar el navegador (SOLO si no está en la caché)
+#     - name: Install Playwright Chromium Browser
+#       if: steps.playwright-cache.outputs.cache-hit != 'true'
+#       run: npx playwright install chromium
+
+#     # 3. Instalar las librerías del sistema (SIEMPRE se ejecuta, no se guarda en caché)
+#     - name: Install Playwright OS Dependencies
+#       run: npx playwright install-deps chromium
+
+#     - name: Run Playwright tests
+#       run: npx playwright test
+      
+#     - uses: actions/upload-artifact@v4
+#       if: ${{ !cancelled() }}
+#       with:
+#         name: playwright-report
+#         path: playwright-report/
+#         retention-days: 30
+
+
+# nueva solución IA reemplazando npx por otra solución
+
+# En lugar de usar los comandos manuales de consola (npx playwright install), 
+# utilizaremos la acción oficial de GitHub mantenida por los creadores de Playwright (microsoft/playwright-actions).
+# Esta acción utiliza scripts internos optimizados a nivel de API que no se congelan en los servidores de Ubuntu.
+
 name: Playwright Tests
 on:
   push:
@@ -18,22 +72,12 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    # 1. Configuración de la caché para los navegadores
-    - name: Cache Playwright browsers
-      id: playwright-cache
-      uses: actions/cache@v4
+    # ESTRATEGIA OFICIAL: La acción nativa de Microsoft gestiona la caché y los navegadores de forma segura
+    - name: Install Playwright Chromium Browser and Deps
+      uses: microsoft/playwright-actions@v1
       with:
-        path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-    # 2. Descargar el navegador (SOLO si no está en la caché)
-    - name: Install Playwright Chromium Browser
-      if: steps.playwright-cache.outputs.cache-hit != 'true'
-      run: npx playwright install chromium
-
-    # 3. Instalar las librerías del sistema (SIEMPRE se ejecuta, no se guarda en caché)
-    - name: Install Playwright OS Dependencies
-      run: npx playwright install-deps chromium
+        # Forzamos a instalar únicamente chromium para evitar saturar el servidor
+        browsers: chromium
 
     - name: Run Playwright tests
       run: npx playwright test

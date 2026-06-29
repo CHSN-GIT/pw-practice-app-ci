@@ -81,11 +81,22 @@ jobs:
       #   browsers: chromium
 
     # nuevo intento de carga de los navegadores
-    - name: Install Playwright Chromium Browser
-      run: npx playwright install chromium
+    # - name: Install Playwright Chromium Browser
+    #   run: npx playwright install chromium
 
-    - name: Install Playwright OS Dependencies
-      run: npx playwright install-deps chromium
+    # - name: Install Playwright OS Dependencies
+    #   run: npx playwright install-deps chromium
+
+# Cache Playwright browsers to avoid re-downloading (otro intento de la IA por corregir el error en la subida)
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: playwright-${{ runner.os }}-
+
+    - name: Install Playwright Chromium Browser
+      run: npx playwright install chromium --with-deps
 
     - name: Run Playwright tests
       run: npx playwright test

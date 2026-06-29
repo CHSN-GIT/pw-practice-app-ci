@@ -67,34 +67,19 @@ jobs:
     
     - uses: actions/setup-node@v4
       with:
-        # node-version: lts/*
-        node-version: '24'
+        node-version: '20'  # Changed from '24' to '20'
         
     - name: Install dependencies
       run: npm ci
 
-    # ESTRATEGIA OFICIAL: La acción nativa de Microsoft gestiona la caché y los navegadores de forma segura
-    # NO HA FUNCIONADO AL NO ENCONTRAR ESA ACCIÓN... LA REEMPLAZARE CON OTRA OPCIÓN DE IA DE GITHUB
-    # - name: Install Playwright Chromium Browser and Deps
-      # uses: microsoft/playwright-actions@v1
-      # with:
-      #   # Forzamos a instalar únicamente chromium para evitar saturar el servidor
-      #   browsers: chromium
-
-    # nuevo intento de carga de los navegadores
-    # - name: Install Playwright Chromium Browser
-    #   run: npx playwright install chromium
-
-    # - name: Install Playwright OS Dependencies
-    #   run: npx playwright install-deps chromium
-
-# Cache Playwright browsers to avoid re-downloading (otro intento de la IA por corregir el error en la subida)
+    # Cache Playwright browsers BEFORE installing
     - name: Cache Playwright browsers
       uses: actions/cache@v4
       with:
         path: ~/.cache/ms-playwright
         key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: playwright-${{ runner.os }}-
+        restore-keys: |
+          playwright-${{ runner.os }}-
 
     - name: Install Playwright Chromium Browser
       run: npx playwright install chromium --with-deps

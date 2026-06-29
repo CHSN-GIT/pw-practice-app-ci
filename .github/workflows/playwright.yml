@@ -73,11 +73,19 @@ jobs:
       run: npm ci
 
     # ESTRATEGIA OFICIAL: La acción nativa de Microsoft gestiona la caché y los navegadores de forma segura
-    - name: Install Playwright Chromium Browser and Deps
-      uses: microsoft/playwright-actions@v1
-      with:
-        # Forzamos a instalar únicamente chromium para evitar saturar el servidor
-        browsers: chromium
+    # NO HA FUNCIONADO AL NO ENCONTRAR ESA ACCIÓN... LA REEMPLAZARE CON OTRA OPCIÓN DE IA DE GITHUB
+    # - name: Install Playwright Chromium Browser and Deps
+      # uses: microsoft/playwright-actions@v1
+      # with:
+      #   # Forzamos a instalar únicamente chromium para evitar saturar el servidor
+      #   browsers: chromium
+
+    # nuevo intento de carga de los navegadores
+    - name: Install Playwright Chromium Browser
+      run: npx playwright install chromium
+
+    - name: Install Playwright OS Dependencies
+      run: npx playwright install-deps chromium
 
     - name: Run Playwright tests
       run: npx playwright test

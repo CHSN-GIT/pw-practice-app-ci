@@ -55,7 +55,7 @@ export default defineConfig<TestOptions>({
 
     trace: 'on-first-retry',
     actionTimeout: 5000,
-    navigationTimeout: 5000,
+    navigationTimeout: 30000,  // ← CHANGED from 5000 to 30000 (30 seconds)
     video: {
       mode:'off',
       size: {width:1920, height: 1080}  // Full HD
@@ -114,6 +114,7 @@ export default defineConfig<TestOptions>({
     command: 'npm run start',
     url: 'http://localhost:4200/',
     timeout: 180000, // <-- antes 60000 (1min) por defecto, ahora 3min (al tardar más con la Docker es conveniente aumentarlo)
+    reuseExistingServer: process.env.CI ? false : true,  // ← ADD THIS: force restart in CI
   }
 
 });

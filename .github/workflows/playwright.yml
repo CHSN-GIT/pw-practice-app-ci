@@ -95,6 +95,21 @@ jobs:
         # git commit -m "Add Playwright snapshot baselines"
         # git push
 
+    # NEW STEP: Generate Linux snapshots
+    - name: Generate Playwright snapshots (Linux)
+      run: npx playwright test --update-snapshots
+
+    # Commit the generated snapshots
+    - name: Commit snapshots to repository
+      if: failure()
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add tests/visualTest.spec.ts-snapshots/
+        git commit -m "Add Linux Playwright snapshots" || echo "No snapshots to commit"
+        git push
+
+    
     - name: Run Playwright tests
       run: npx playwright test   # utilizando el parámetro --ignore-snapshots podemos excluir las
                                  # pruebas visuales (en este caso subiremos ellas a GitHub)

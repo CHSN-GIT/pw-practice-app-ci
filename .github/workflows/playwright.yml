@@ -98,16 +98,31 @@ jobs:
     # NEW STEP: Generate Linux snapshots
     - name: Generate Playwright snapshots (Linux)
       run: npx playwright test --update-snapshots
+      continue-on-error: true
 
-    # Commit the generated snapshots
+    # Check if snapshots were generated
+    - name: Check for new snapshots
+      id: check-snapshots
+      run: |
+        if [ -d "tests/visualTest.spec.ts-snapshots" ] && [ "$(ls -A tests/visualTest.spec.ts-snapshots)" ]; then
+          echo "has-snapshots=true" >> $GITHUB_OUTPUT
+          echo "Snapshots found:"
+          ls -la tests/visualTest.spec.ts-snapshots/
+        else
+          echo "has-snapshots=false" >> $GITHUB_OUTPUT
+          echo "No new snapshots generated"
+        fi
+
+    # Commit the generated snapshots if they exist
     - name: Commit snapshots to repository
-      if: failure()
+      if: steps.check-snapshots.outputs.has-snapshots == 'true'
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add tests/visualTest.spec.ts-snapshots/
+        git status
         git commit -m "Add Linux Playwright snapshots" || echo "No snapshots to commit"
-        git push
+        git push origin HEAD:${{ github.ref_name }}
 
     
     - name: Run Playwright tests

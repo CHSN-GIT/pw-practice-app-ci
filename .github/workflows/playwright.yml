@@ -62,8 +62,12 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # ← ADD THIS - allows workflow to write to repository
     steps:
     - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}  # ← ADD THIS - use the default token
     
     - uses: actions/setup-node@v4
       with:
@@ -95,7 +99,7 @@ jobs:
         # git commit -m "Add Playwright snapshot baselines"
         # git push
 
-    # NEW STEP: Generate Linux snapshots
+    # NEW STEP: Generate Linux snapshots (first time only, then CI will validate against them)
     - name: Generate Playwright snapshots (Linux)
       run: npx playwright test --update-snapshots
       continue-on-error: true
@@ -114,7 +118,7 @@ jobs:
         fi
 
     # Commit the generated snapshots if they exist
-    - name: Commit snapshots to repository
+    - name: Commit and push snapshots to repository
       if: steps.check-snapshots.outputs.has-snapshots == 'true'
       run: |
         git config user.name "github-actions[bot]"

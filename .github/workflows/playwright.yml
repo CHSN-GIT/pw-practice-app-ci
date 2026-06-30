@@ -67,12 +67,11 @@ jobs:
     
     - uses: actions/setup-node@v4
       with:
-        node-version: '20'  # Changed from '24' to '20'
+        node-version: '20'
         
     - name: Install dependencies
       run: npm ci
 
-    # Cache Playwright browsers BEFORE installing
     - name: Cache Playwright browsers
       uses: actions/cache@v4
       with:
@@ -81,11 +80,24 @@ jobs:
         restore-keys: |
           playwright-${{ runner.os }}-
 
-    - name: Install Playwright Chromium Browser
-      run: npx playwright install chromium --with-deps
+    # Install ALL required browsers (chromium + firefox)
+    - name: Install Playwright Browsers
+      run: npx playwright install chromium firefox --with-deps
+
+    # debo o excluir el test de snapshots o incluir la carpeta de las capturas en GIT
+    # incluiremos la carpeta una vez ejecutado el test para disponer de las imágenes
+    # y sumaremos la carpeta en la subida a GIT
+        # # Run locally first to generate snapshots
+        # npx playwright test --update-snapshots
+
+        # # Then commit the snapshot folder to git
+        # git add tests/visualTest.spec.ts-snapshots/
+        # git commit -m "Add Playwright snapshot baselines"
+        # git push
 
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test   # utilizando el parámetro --ignore-snapshots podemos excluir las
+                                 # pruebas visuales (en este caso subiremos ellas a GitHub)
       
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
